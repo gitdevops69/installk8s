@@ -1,0 +1,23 @@
+
+run installk8s.sh script on both master and slave nodes
+
+on master:
+---------
+switch to root and run "kubeadm init"
+exit from root and run below:
+  mkdir -p $HOME/.kube
+  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+as ubuntu:
+kubectl apply -f https://github.com/coreos/flannel/raw/master/Documentation/kube-flannel.yml
+
+On slaves:
+---------
+as root: 
+kubeadm join 172.31.47.180:6443 --token dejli1.ju0upxmpss0xb3oc \
+        --discovery-token-ca-cert-hash sha256:18d28e82c1c03b892d97de7334500dea6e0fa2d1250bf3d03f7d3a12e99d116d
+
+kubectl label node ip-172-31-9-5 node-role.kubernetes.io/node2=slave2
+
+
